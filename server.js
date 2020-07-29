@@ -51,7 +51,7 @@ mongoose
 // require("./config/passport")(passport);
 
 // Use Routes
-app.use("/api/cheaterrank", test);
+app.use("/api/v1/cheaterrank", test);
 // app.use("/api/auth", user);
 
 const port = process.env.PORT || 8000;
