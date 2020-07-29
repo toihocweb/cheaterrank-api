@@ -15,6 +15,7 @@ if (process.env.NODE_ENV === "PROD") {
   var whitelist = ["https://toihocweb.net", "http://toihocweb.net"];
   var corsOptions = {
     origin: function (origin, callback) {
+      console.log("origin", origin);
       if (whitelist.indexOf(origin) !== -1) {
         callback(null, true);
       } else {
