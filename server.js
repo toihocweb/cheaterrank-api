@@ -12,7 +12,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 if (process.env.NODE_ENV === "PROD") {
-  const whitelist = ["https://toihocweb.net/"];
+  const whitelist = ["https://toihocweb.net"];
   const corsOptions = {
     origin: function (origin, callback) {
       if (whitelist.indexOf(origin) !== -1) {
