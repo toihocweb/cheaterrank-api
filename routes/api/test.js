@@ -3,6 +3,7 @@ const router = express.Router();
 const rateLimit = require("express-rate-limit");
 const status = require("http-status");
 const Test = require("../../models/Test");
+const passport = require("passport");
 
 // @route   GET api/cheaterrank/test
 // @desc    test route
@@ -64,22 +65,33 @@ router.post("/test", (req, res) => {
 // @route   DELETE api/code/question/:id/
 // @desc    delete a question
 // @access  Private
-router.delete("/test/:id", (req, res) => {
-  const id = req.params.id;
-  Test.findByIdAndDelete(id)
-    .then((rs) => {
-      if (!rs) {
-        return res
-          .status(status.NOT_FOUND)
-          .json({ code: status.NOT_FOUND, msg: "question can not found" });
-      }
-      return res.status(status.OK).json(rs);
-    })
-    .catch((error) => {
+router.delete(
+  "/test/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const reqUser = req.user;
+    if (reqUser.role === "admin") {
+      const id = req.params.id;
+      Test.findByIdAndDelete(id)
+        .then((rs) => {
+          if (!rs) {
+            return res
+              .status(status.NOT_FOUND)
+              .json({ code: status.NOT_FOUND, msg: "question can not found" });
+          }
+          return res.status(status.OK).json(rs);
+        })
+        .catch((error) => {
+          return res
+            .status(status.NOT_FOUND)
+            .json({ code: status.NOT_FOUND, msg: "question can not found" });
+        });
+    } else {
       return res
-        .status(status.NOT_FOUND)
-        .json({ code: status.NOT_FOUND, msg: "question can not found" });
-    });
-});
+        .status(status.UNAUTHORIZED)
+        .json({ code: status.UNAUTHORIZED, msg: "unauthorized" });
+    }
+  }
+);
 
 module.exports = router;

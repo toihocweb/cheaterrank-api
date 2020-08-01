@@ -3,7 +3,8 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const test = require("./routes/api/test");
-// const passport = require("passport");
+const user = require("./routes/api/user");
+const passport = require("passport");
 
 const app = express();
 
@@ -52,14 +53,14 @@ mongoose
   .catch((err) => console.log(err));
 
 // Passport middleware
-// app.use(passport.initialize());
+app.use(passport.initialize());
 
 // Passport Config
-// require("./config/passport")(passport);
+require("./config/passport")(passport);
 
 // Use Routes
 app.use("/api/v1/cheaterrank", test);
-// app.use("/api/auth", user);
+app.use("/api/v1/cheaterrank/auth", user);
 
 const port = process.env.PORT || 8000;
 app.listen(port, () => console.log(`Server  on port ${port}`));
