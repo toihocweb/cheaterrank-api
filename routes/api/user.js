@@ -54,7 +54,12 @@ router.post("/register", (req, res) => {
           newUser.password = hash;
           newUser
             .save()
-            .then((user) => res.status(status.CREATED).json(user))
+            .then((user) => {
+              const { _id: id, name, avatar, role } = user;
+              return res
+                .status(status.CREATED)
+                .json({ id, name, avatar, role });
+            })
             .catch((err) =>
               res.status(status.INTERNAL_SERVER_ERROR).json({
                 code: status.INTERNAL_SERVER_ERROR,
