@@ -4,6 +4,7 @@ const rateLimit = require("express-rate-limit");
 const status = require("http-status");
 const Test = require("../../models/Test");
 const passport = require("passport");
+const User = require("../../models/User");
 
 // @route   GET api/cheaterrank/test
 // @desc    test route
@@ -34,33 +35,44 @@ router.get("/tests", (req, res) => {
     });
 });
 
-// @route   POST api/code/question
-// @desc    post questions route
+// @route   POST api/code/test
+// @desc    post test route
 // @access  Public
-router.post("/test", (req, res) => {
-  const { language, desc, inputs, outputs } = req.body;
-  const test = new Test({
-    language,
-    desc,
-    inputs,
-    outputs,
-  });
-  test
-    .save()
-    .then((rs) => {
-      if (!res) {
-        return res
-          .status(status.BAD_REQUEST)
-          .json({ code: status.BAD_REQUEST, msg: "Error when posting" });
-      }
-      return res.status(status.CREATED).json(rs);
-    })
-    .catch((error) => {
+router.post(
+  "/test",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const reqUser = req.user;
+    if (reqUser.role === "admin") {
+      const { language, desc, inputs, outputs } = req.body;
+      const test = new Test({
+        language,
+        desc,
+        inputs,
+        outputs,
+      });
+      test
+        .save()
+        .then((rs) => {
+          if (!res) {
+            return res
+              .status(status.BAD_REQUEST)
+              .json({ code: status.BAD_REQUEST, msg: "Error when posting" });
+          }
+          return res.status(status.CREATED).json(rs);
+        })
+        .catch((error) => {
+          return res
+            .status(status.INTERNAL_SERVER_ERROR)
+            .json({ code: status.INTERNAL_SERVER_ERROR, msg: error.message });
+        });
+    } else {
       return res
-        .status(status.INTERNAL_SERVER_ERROR)
-        .json({ code: status.INTERNAL_SERVER_ERROR, msg: error.message });
-    });
-});
+        .status(status.UNAUTHORIZED)
+        .json({ code: status.UNAUTHORIZED, msg: "unauthorized" });
+    }
+  }
+);
 
 // @route   DELETE api/code/question/:id/
 // @desc    delete a question
@@ -93,5 +105,55 @@ router.delete(
     }
   }
 );
+
+// @route   POST api/v1/cheaterrank/test/submit
+// @desc    submit code
+// @access  Private
+router.post(
+  "/test/submit",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { userId, testId, code } = req.body;
+
+    Test.findById(testId)
+      .then((test) => {
+        Test.findOneAndUpdate(
+          {
+            _id: testId,
+            submitted_users: { $elemMatch: { userId } },
+          },
+          {
+            $set: {
+              // "submitted_users.$.userId": userId,
+              "submitted_users.$.code": code,
+            },
+          },
+          { new: true, safe: true, upsert: true }
+        )
+          .then((test) =>
+            res
+              .status(status.CREATED)
+              .json({ code: status.CREATED, data: test._doc })
+          )
+          .catch((err) => {
+            test.submitted_users.push({ userId, code });
+            test
+              .save()
+              .then((data) =>
+                res
+                  .status(status.CREATED)
+                  .json({ code: status.CREATED, data: data._doc })
+              );
+          });
+      })
+      .catch((err) =>
+        res.status(status.NOT_FOUND).json({ msg: "User is not found" })
+      );
+  }
+);
+
+// router.delete("/test/delete/all", (req, res) => {
+//   Test.remove({}).then((data) => res.json({ msg: "deleted all" }));
+// });
 
 module.exports = router;

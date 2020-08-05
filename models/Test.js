@@ -24,6 +24,18 @@ const TestSchema = new Schema({
     type: String,
     required: true,
   },
+  submitted_users: [
+    {
+      userId: {
+        type: Schema.Types.ObjectId,
+        ref: "users",
+      },
+      code: {
+        type: String,
+        required: true,
+      },
+    },
+  ],
   created_date: {
     type: Date,
     default: Date.now,

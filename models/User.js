@@ -24,6 +24,7 @@ const UserSchema = new Schema({
     enum: ["guest", "admin"],
     default: "guest",
   },
+
   created_date: {
     type: Date,
     default: Date.now,

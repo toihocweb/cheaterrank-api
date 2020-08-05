@@ -18,6 +18,13 @@ router.get("/test", (req, res) =>
   res.status(status.OK).json({ code: status.OK, msg: "Code Works" })
 );
 
+// @route   GET api/user/test
+// @desc    Tests users route
+// @access  Public
+router.get("/users", (req, res) => {
+  User.find({}).then((user) => res.json(user));
+});
+
 // @route   POST api/auth/register
 // @desc    register a user route
 // @access  Public

@@ -63,4 +63,24 @@ app.use("/api/v1/cheaterrank", test);
 app.use("/api/v1/cheaterrank/auth", user);
 
 const port = process.env.PORT || 8000;
-app.listen(port, () => console.log(`Server  on port ${port}`));
+const server = app.listen(port, () =>
+  console.log(`Server running on port ${port}`)
+);
+const io = require("./socket").init(server);
+var users = [];
+
+io.on("connect", (socket) => {
+  var currentUser;
+  socket.on("user", (user) => {
+    if (users.indexOf(user) === -1) {
+      users.push(user);
+      currentUser = user;
+    }
+    io.emit("get online users", JSON.stringify(users));
+  });
+  socket.on("disconnect", (socket) => {
+    console.log("Client disconnected");
+    console.log("user off: ", currentUser);
+    io.emit("get online users", JSON.stringify(users));
+  });
+});
