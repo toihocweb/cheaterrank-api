@@ -50,14 +50,14 @@ app.use("/api/v1/cheaterrank", test);
 app.use("/api/v1/cheaterrank/auth", user);
 
 // Server static assets if in production
-if (process.env.NODE_ENV === "PROD") {
-  // Set static folder
-  app.use(express.static("client/build"));
+// if (process.env.NODE_ENV === "PROD") {
+//   // Set static folder
+//   app.use(express.static("client/build"));
 
-  app.get("*", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
-  });
-}
+//   app.get("*", (req, res) => {
+//     res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+//   });
+// }
 
 const port = process.env.PORT || 8000;
 const server = app.listen(port, () =>
@@ -68,6 +68,7 @@ var users = [];
 
 io.on("connect", (socket) => {
   let currentUser = null;
+  console.log("uusers: ", users);
   socket.on("user", (user) => {
     currentUser = user;
     const idx = users.findIndex((val) => val.id === user.id);
