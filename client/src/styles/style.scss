@@ -1,0 +1,19 @@
+@import "reset";
+@import "grid";
+
+.container {
+  max-width: 1100px;
+  margin: auto;
+}
+
+.ant-menu-submenu-title {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+.ant-menu-root {
+  background: none !important;
+  border: none !important;
+}
+.ant-menu-submenu-arrow {
+  display: none !important;
+}

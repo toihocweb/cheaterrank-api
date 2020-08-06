@@ -1,0 +1,33 @@
+.addTestForm {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  width: 500px;
+  background: white;
+  padding: 30px;
+  label {
+    margin-bottom: 20px;
+    input,
+    textarea {
+      border: 1px solid #333;
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+    }
+  }
+  button {
+    padding: 10px;
+    background: #1da57a;
+    color: #333;
+    border-radius: 3px;
+    font-weight: bold;
+    font-size: 19px;
+    cursor: pointer;
+  }
+}

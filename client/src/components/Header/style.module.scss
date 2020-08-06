@@ -1,0 +1,27 @@
+.header {
+  padding: 14px 0px;
+}
+
+.sub {
+  background: #1da57a;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  a {
+    color: #333 !important;
+  }
+}
+.BtnLogin {
+  padding: 0.5rem 1rem;
+  border-width: 3px;
+  border-style: solid;
+  border-color: rgb(0, 59, 0);
+  font-weight: bold;
+}
+
+.BtnRegister {
+  padding: 0.5rem 1rem;
+  border-width: 3px;
+  font-weight: bold;
+}
