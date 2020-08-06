@@ -61,9 +61,8 @@ app.use("/api/v1/cheaterrank/auth", user);
 // }
 
 const options = {
-  key: fs.readFileSync(path.join(__dirname, "ssl", "key.pem")),
-  cert: fs.readFileSync(path.join(__dirname, "ssl", "cert.pem")),
-  passphrase: "123456",
+  cert: fs.readFileSync(path.join(__dirname, "ssl", "server.crt")),
+  key: fs.readFileSync(path.join(__dirname, "ssl", "server.key")),
 };
 
 const port = process.env.PORT || 8000;
