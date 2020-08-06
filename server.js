@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 if (process.env.NODE_ENV === "PROD") {
   app.use(
     cors({
-      origin: "https://toihocweb.net",
+      origin: "http://toihocweb.net",
     })
   );
 } else {
