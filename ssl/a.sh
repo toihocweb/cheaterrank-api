@@ -26,7 +26,7 @@ echo "Done."
 
 echo
 echo "Creating Server certificate..."
-CN="localhost"
+CN="127.0.0.1"
 openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:$KEY_BITS -out $SERVER_KEY
 openssl req -new -key $SERVER_KEY -subj "//CN=$CN\O=$ORG" -out $SERVER_CSR
 openssl x509 -days $VALID_DAYS -req -in $SERVER_CSR -CAcreateserial -CA $CA_CERT -CAkey $CA_KEY -out $SERVER_CERT
