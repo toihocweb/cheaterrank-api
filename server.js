@@ -61,8 +61,9 @@ app.use("/api/v1/cheaterrank/auth", user);
 // }
 
 const options = {
-  key: fs.readFileSync("./toihocweb_net.key"),
-  cert: fs.readFileSync("./toihocweb_net.crt"),
+  key: fs.readFileSync(path.join(__dirname, "ssl", "key.pem")),
+  cert: fs.readFileSync(path.join(__dirname, "ssl", "cert.pem")),
+  passphrase: "123456",
 };
 
 const port = process.env.PORT || 8000;
