@@ -13,19 +13,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 if (process.env.NODE_ENV === "PROD") {
-  // var whitelist = ["https://toihocweb.net", "http://toihocweb.net"];
-  // var corsOptions = {
-  //   origin: function (origin, callback) {
-  //     console.log("origin", origin);
-  //     if (whitelist.indexOf(origin) !== -1) {
-  //       callback(null, true);
-  //     } else {
-  //       callback(new Error("Not allowed by CORS"));
-  //     }
-  //   },
-  // };
-
-  // app.use(cors(corsOptions));
   app.use(
     cors({
       origin: "https://toihocweb.net",
@@ -70,17 +57,31 @@ const io = require("./socket").init(server);
 var users = [];
 
 io.on("connect", (socket) => {
-  var currentUser;
+  let currentUser = null;
   socket.on("user", (user) => {
-    if (users.indexOf(user) === -1) {
+    currentUser = user;
+    const idx = users.findIndex((val) => val.id === user.id);
+    if (idx === -1) {
+      user.count = 1;
       users.push(user);
-      currentUser = user;
+    } else {
+      users[idx].count += 1;
     }
-    io.emit("get online users", JSON.stringify(users));
+    console.log(users);
+    io.emit("get online users", users);
   });
-  socket.on("disconnect", (socket) => {
+  socket.on("disconnect", (data) => {
     console.log("Client disconnected");
-    console.log("user off: ", currentUser);
-    io.emit("get online users", JSON.stringify(users));
+    console.log("user off", currentUser);
+    if (currentUser) {
+      const idx = users.findIndex((val) => val.id === currentUser.id);
+      if (idx !== -1) {
+        users[idx].count -= 1;
+        if (users[idx].count === 0) {
+          users.splice(idx, 1);
+        }
+      }
+      io.emit("get online users", users);
+    }
   });
 });
