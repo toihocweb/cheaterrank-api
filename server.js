@@ -7,8 +7,6 @@ const user = require("./routes/api/user");
 const passport = require("passport");
 const fs = require("fs");
 const app = express();
-const https = require("https");
-const path = require("path");
 // Body parser middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -60,15 +58,10 @@ app.use("/api/v1/cheaterrank/auth", user);
 //   });
 // }
 
-const options = {
-  cert: fs.readFileSync(path.join(__dirname, "ssl", "server.crt")),
-  key: fs.readFileSync(path.join(__dirname, "ssl", "server.key")),
-};
-
 const port = process.env.PORT || 8000;
-const server = https
-  .createServer(options, app)
-  .listen(port, () => console.log(`Server running on port ${port}`));
+const server = app.listen(port, () =>
+  console.log(`Server running on port ${port}`)
+);
 const io = require("./socket").init(server);
 var users = [];
 
