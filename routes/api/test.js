@@ -5,6 +5,7 @@ const status = require("http-status");
 const Test = require("../../models/Test");
 const passport = require("passport");
 const User = require("../../models/User");
+const io = require("../../socket");
 
 // @route   GET api/cheaterrank/test
 // @desc    test route
@@ -130,11 +131,16 @@ router.post(
           },
           { new: true, safe: true, upsert: true }
         )
-          .then((test) =>
+          .then((test) => {
+            io.getIO().emit("test", {
+              action: "submit",
+              msg: `${userName} just submitted`,
+              userId,
+            });
             res
               .status(status.CREATED)
-              .json({ code: status.CREATED, data: test._doc })
-          )
+              .json({ code: status.CREATED, data: test._doc });
+          })
           .catch((err) => {
             test.submitted_users.push({ userId, code });
             test
