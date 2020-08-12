@@ -146,4 +146,22 @@ router.get(
   }
 );
 
+// @route   GET api/auth/current
+// @desc    Return current user
+// @access  Private
+router.get(
+  "/user/:userId",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const userId = req.params.userId;
+    User.findById(userId)
+      .then((user) => {
+        return res.json({ code: status.OK, msg: user.name });
+      })
+      .catch((err) => {
+        return res.json({ code: status.NOT_FOUND, msg: "user not found" });
+      });
+  }
+);
+
 module.exports = router;

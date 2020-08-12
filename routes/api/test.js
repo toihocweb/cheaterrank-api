@@ -113,7 +113,7 @@ router.post(
   "/test/submit",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    const { userId, testId, code } = req.body;
+    const { userId, testId, code, userName } = req.body;
 
     Test.findById(testId)
       .then((test) => {
@@ -124,7 +124,7 @@ router.post(
           },
           {
             $set: {
-              // "submitted_users.$.userId": userId,
+              "submitted_users.$.userName": userName,
               "submitted_users.$.code": code,
             },
           },

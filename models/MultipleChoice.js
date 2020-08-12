@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-// Test Schema
-const TestSchema = new Schema({
+// MultipleChoice Schema
+const MultipleChoiceSchema = new Schema({
   language: {
     type: String,
     required: true,
@@ -12,32 +12,18 @@ const TestSchema = new Schema({
     enum: [0, 1, 2],
     default: 0,
   },
-  desc: {
+  title: {
     type: String,
     required: true,
   },
-  inputs: {
-    type: String,
-    required: true,
-  },
-  outputs: {
-    type: String,
-    required: true,
-  },
+  questions: [String],
   submitted_users: [
     {
       userId: {
         type: Schema.Types.ObjectId,
         ref: "users",
       },
-      userName: {
-        type: String,
-        require: true,
-      },
-      code: {
-        type: String,
-        required: true,
-      },
+      anwser: [Number],
     },
   ],
   created_date: {
@@ -46,4 +32,7 @@ const TestSchema = new Schema({
   },
 });
 
-module.exports = Test = mongoose.model("tests", TestSchema);
+module.exports = MultipleChoice = mongoose.model(
+  "MultipleChoices",
+  MultipleChoiceSchema
+);
