@@ -20,6 +20,7 @@ router.get("/test", (req, res) => {
 router.get("/tests", (req, res) => {
   Test.find()
     .sort({ _id: 1 })
+    .populate("submitted_users.userId", "name")
     .then((rs) => {
       if (!rs) {
         return res
@@ -114,8 +115,7 @@ router.post(
   "/test/submit",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    const { userId, testId, code, userName } = req.body;
-
+    const { userId, testId, code } = req.body;
     Test.findById(testId)
       .then((test) => {
         Test.findOneAndUpdate(
@@ -125,19 +125,15 @@ router.post(
           },
           {
             $set: {
-              "submitted_users.$.userName": userName,
               "submitted_users.$.code": code,
             },
           },
           { new: true, safe: true, upsert: true }
         )
+          .populate("submitted_users.userId", "name")
           .then((test) => {
-            io.getIO().emit("test", {
-              action: "submit",
-              msg: `${userName} just submitted`,
-              userId,
-            });
-            res
+            console.log(test);
+            return res
               .status(status.CREATED)
               .json({ code: status.CREATED, data: test._doc });
           })

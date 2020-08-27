@@ -30,10 +30,6 @@ const TestSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "users",
       },
-      userName: {
-        type: String,
-        require: true,
-      },
       code: {
         type: String,
         required: true,

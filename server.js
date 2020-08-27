@@ -4,8 +4,9 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const test = require("./routes/api/test");
 const user = require("./routes/api/user");
+const challenge = require("./routes/api/challenge");
+
 const passport = require("passport");
-const fs = require("fs");
 const app = express();
 // Body parser middleware
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -46,6 +47,7 @@ require("./config/passport")(passport);
 
 // Use Routes
 app.use("/api/v1/cheaterrank", test);
+app.use("/api/v1/cheaterrank/challenge", challenge);
 app.use("/api/v1/cheaterrank/auth", user);
 
 // Server static assets if in production
