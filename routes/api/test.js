@@ -139,13 +139,16 @@ router.post(
           })
           .catch((err) => {
             test.submitted_users.push({ userId, code });
-            test
-              .save()
-              .then((data) =>
-                res
-                  .status(status.CREATED)
-                  .json({ code: status.CREATED, data: data._doc })
-              );
+            test.save().then((data) => {
+              data
+                .populate("submitted_users.userId", "name")
+                .then((data) =>
+                  res
+                    .status(status.CREATED)
+                    .json({ code: status.CREATED, data })
+                );
+            });
+            // data..populate("submitted_users.userId", "name")
           });
       })
       .catch((err) =>
