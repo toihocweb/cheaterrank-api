@@ -5,9 +5,10 @@ const cors = require("cors");
 const test = require("./routes/api/test");
 const user = require("./routes/api/user");
 const challenge = require("./routes/api/challenge");
-
+const https = require("https");
 const passport = require("passport");
 const app = express();
+const fs = require("fs");
 // Body parser middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -61,6 +62,9 @@ app.use("/api/v1/cheaterrank/auth", user);
 // }
 
 const port = process.env.PORT || 8000;
+
+// server.listen(port);
+
 const server = app.listen(port, () =>
   console.log(`Server running on port ${port}`)
 );

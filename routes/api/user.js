@@ -57,6 +57,7 @@ router.post("/register", (req, res) => {
       });
       bcrypt.genSalt(12, (err, salt) => {
         bcrypt.hash(newUser.password, salt, (err, hash) => {
+          console.log(err);
           if (err) throw err;
           newUser.password = hash;
           newUser
@@ -67,12 +68,13 @@ router.post("/register", (req, res) => {
                 .status(status.CREATED)
                 .json({ id, name, avatar, role });
             })
-            .catch((err) =>
-              res.status(status.INTERNAL_SERVER_ERROR).json({
+            .catch((err) => {
+              console.log(err);
+              return res.status(status.INTERNAL_SERVER_ERROR).json({
                 code: status.INTERNAL_SERVER_ERROR,
                 msg: "something wrong when create password",
-              })
-            );
+              });
+            });
         });
       });
     }

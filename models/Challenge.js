@@ -7,8 +7,10 @@ const ChallengeSchema = new Schema(
     title: String,
     tests: [
       {
-        type: Schema.Types.ObjectId,
-        ref: "tests",
+        test: {
+          type: Schema.Types.ObjectId,
+          ref: "tests",
+        },
       },
     ],
   },
