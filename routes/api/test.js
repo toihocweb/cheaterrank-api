@@ -46,12 +46,13 @@ router.post(
   (req, res) => {
     const reqUser = req.user;
     if (reqUser.role === "admin") {
-      const { language, desc, inputs, outputs } = req.body;
+      const { language, desc, inputs, outputs, level } = req.body;
       const test = new Test({
         language,
         desc,
         inputs,
         outputs,
+        level,
       });
       test
         .save()
